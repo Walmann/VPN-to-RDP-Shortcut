@@ -1,0 +1,1 @@
+TODO: VPN PW kan være forskjellig fra RDP. Dette må spørres om.
