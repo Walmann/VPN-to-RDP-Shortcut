@@ -1,9 +1,9 @@
-﻿$RDPConnection  = $args[0]
-$RDPUsername    = $args[1]
-$RDPPort        = $args[2] #Viss denne er tom brukes standard port
-$RDPServerIP    = $args[3]
+﻿$RDPConnection      = $args[0]
+$RDPUsername        = $args[1]
+$RDPPort            = $args[2] #Viss denne er tom brukes standard port
+$RDPServerIP        = $args[3]
 $VPNRemoteAddress   = $args[4]
-$VPNUsername    = $args[5]
+$VPNUsername        = $args[5]
 
 
 $VPNTempName    = "TempVPNConnection"
@@ -41,7 +41,7 @@ function New-VPN-Profile {
                                       -password $VPNPassword `
                                       -domain ''
 
-
+    Write-Host
     # $PKGlocation = "$Env:Appdata\Microsoft\Network\Connections\Pbk\rasphone.pbk"
     # ((Get-Content -path $PKGlocation -Raw) -replace 'PreviewUserPw=1','PreviewUserPw=0') | Set-Content -Path $PKGlocation |Wait-Event
     # Write-Host
@@ -126,7 +126,7 @@ Write-Host "Connecting to VPN"
 start-sleep -s 2
 $vpn = Get-VpnConnection -Name $VPNTempName;
 if($vpn.ConnectionStatus -eq "Disconnected"){
-    rasdial -d "$VPNTempName"
+    rasdial.exe -d "$VPNTempName"
     $VPNid = (Get-Process rasdial).Id
     Wait-Process -Id $VPNid
     }
@@ -141,7 +141,7 @@ Wait-Process -Id $RDPid
 Write-Host "RDP Avsluttet. Avslutter og sletter Temp VPN"
 $vpn = Get-VpnConnection -Name "$VPNTempName";
 if($vpn.ConnectionStatus -eq "Connected"){
-    rasdial $VPNTempName /DISCONNECT;
+    rasdial.exe $VPNTempName /DISCONNECT;
   }
 
 $DoesVPNAlreaduExists = Get-VpnConnection -Name $VPNTempName
