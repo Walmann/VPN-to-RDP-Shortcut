@@ -10,7 +10,15 @@ $VPNTempName    = "TempVPNConnection"
 
 
 
+#Debug:
+$RDPConnection  = "remote.msgproduction.no"
+$RDPUsername    = "nett-opp"
+$RDPPort        = "" #Viss denne er tom brukes standard port
+$RDPServerIP    = "10.10.1.10" #Må være IP addresse
 
+#Viss en VPN instilling er tom, brukes RDP info.
+$VPNRemoteAddress   = ""
+$VPNUsername    = ""
 
 
 
@@ -26,11 +34,17 @@ function New-VPN-Profile {
     Add-VpnConnection -Name $VPNTempName `
                       -ServerAddress $VPNRemoteAddress `
                       -SplitTunneling `
-                      -UseWinlogonCredential
+                      -RememberCredential:$true
 
-    $PKGlocation = "$Env:Appdata\Microsoft\Network\Connections\Pbk\rasphone.pbk"
-    ((Get-Content -path $PKGlocation -Raw) -replace 'PreviewUserPw=1','PreviewUserPw=0') | Set-Content -Path $PKGlocation |Wait-Event
-    Write-Host
+    Set-VpnConnectionUsernamePassword -connectionname $VPNTempName `
+                                      -username $VPNUsername `
+                                      -password $VPNPassword `
+                                      -domain ''
+
+
+    # $PKGlocation = "$Env:Appdata\Microsoft\Network\Connections\Pbk\rasphone.pbk"
+    # ((Get-Content -path $PKGlocation -Raw) -replace 'PreviewUserPw=1','PreviewUserPw=0') | Set-Content -Path $PKGlocation |Wait-Event
+    # Write-Host
 }
 
 function Wait-VPNConnection {
@@ -110,9 +124,9 @@ New-VPN-Profile | Out-Null
 # Koble til VPN
 Write-Host "Connecting to VPN"
 start-sleep -s 2
-$vpn = Get-VpnConnection -Name "$VPNTempName";
+$vpn = Get-VpnConnection -Name $VPNTempName;
 if($vpn.ConnectionStatus -eq "Disconnected"){
-    rasdial -d $VPNTempName $VPNUsername $RDPPassword;
+    rasdial -d "$VPNTempName"
     $VPNid = (Get-Process rasdial).Id
     Wait-Process -Id $VPNid
     }
