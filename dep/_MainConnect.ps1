@@ -21,7 +21,7 @@ param (
     [Parameter()]
     [string]$VPN_User
 )
-$PhoneBookLocation  = ".\dep\Phonebook.pbk"
+$PhoneBookLocation  = ".\dep\$VPN_Name.pbk"
 
 
 #Debug:
