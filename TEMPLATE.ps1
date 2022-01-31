@@ -9,4 +9,4 @@ $Arguments = @{
 }
 
 
-Powershell.exe -executionpolicy remotesigned -Command  ".\dep\_MainConnect.ps1" @Arguments
+Powershell.exe -executionpolicy Bypass -Command  ".\dep\_MainConnect.ps1" @Arguments
