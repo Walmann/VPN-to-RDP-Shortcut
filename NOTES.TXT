@@ -1,8 +1,1 @@
 TODO: VPN PW kan være forskjellig fra RDP. Dette må spørres om.
-
-
-
-Note: 
-
-Er snart klar til å gi opp. Den sliter med å finne en phonebook. Hvordan jeg skal fikse det vet jeg ikke. 
-Jeg gir det 1 dag til før jeg starter på noe annet.
