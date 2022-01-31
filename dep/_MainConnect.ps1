@@ -89,7 +89,7 @@ rasdial.exe $VPN_Name $VPN_User $VPNPassword "/phonebook:$PhoneBookLocation"
 # Write-Host $VPN_Name.ConnectionStatus
 
 
-#Kobler til VPN
+#Kobler til RPD
 Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:$RDP_Server_IP"
 $RDPid = (Get-Process mstsc).Id
 Wait-Process -Id $RDPid
