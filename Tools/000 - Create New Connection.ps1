@@ -22,29 +22,48 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
 
     #Lag en kopi av template og bytt ut informasjon
     New-Item -Path "." -Name ($New_VPN_Name + ".ps1") -ItemType "file"
-    $Template_Content = @"
-    `$Arguments = @{
-    
-        # VPN_Name        = "$New_VPN_Name"             #Navnet til VPN tilkoblingen i .dep\Phonebook.pbk
-        # RDP_Server_IP   = "$New_RDP_Server_IP"        #Må være IP addresse
-        # RDP_Port        = "$New_RDP_Server_Port"      #Viss denne er tom brukes standard port
-        # RDP_Username    = "$New_RDP_Username"
-        # VPN_User        = "$New_VPN_Username"         #Viss denne er tom brukes RDP_Username
-    }
-        #OBS!!! Argumenter som ikke er i bruk må kommenteres ut med "#"
-    
-    Powershell.exe -executionpolicy Bypass -Command ".\dep\_MainConnect.ps1" @Arguments
+    $Template_Content_start = @"
+`$Arguments = @{
 "@
-    $Path_Connect_Template = ("./$New_VPN_Name" + ".ps1")
-    Add-Content -Path $Path_Connect_Template -Value $Template_Content
-    
-    $List_Variables_To_Change = ${New_VPN_Name},${New_VPN_Username},${New_RDP_Server_IP},${New_RDP_Server_IP},${New_RDP_Server_Port},${New_RDP_Username}
 
-    Foreach ($Entry in $List_Variables_To_Change) {
-        if ("" -ne ($Entry)){
-            Set-Content -Path $Path_Connect_Template -Value (get-content -Path $Path_Connect_Template | (Select-String -Pattern $Entry).Line.Replace("#", "", 1))
+
+    [System.Collections.ArrayList]$Template_Content_mid = @()
+    if (![string]::IsNullOrEmpty($New_VPN_Name)){
+        $Template_Content_mid.Add('         VPN_Name        = ' + "`"$New_VPN_Name`"" + "`n")
         }
-    } # End Foreach.
+    if (![string]::IsNullOrEmpty($New_RDP_Server_IP)){
+        $Template_Content_mid.Add('         RDP_Server_IP   = ' + "`"$New_RDP_Server_IP`"" + "`n")
+        }
+    if (![string]::IsNullOrEmpty($New_RDP_Server_Port)){
+        $Template_Content_mid.Add('         RDP_Port        = ' + "`"$New_RDP_Server_Port`"" + "`n")
+    }
+    if (![string]::IsNullOrEmpty($New_RDP_Username)){
+        $Template_Content_mid.Add('         RDP_Username    = ' + "`"$New_RDP_Username`"" + "`n")
+        }
+    if (![string]::IsNullOrEmpty($New_VPN_Username)){
+        $Template_Content_mid.Add('         VPN_User        = ' + "`"$New_VPN_Username`"" + "`n")
+        }
+
+    $Template_Content_end = @"
+
+}
+#OBS!!! Argumenter som ikke er i bruk må kommenteres ut med "#"
+
+Powershell.exe -executionpolicy Bypass -Command ".\dep\_MainConnect.ps1" @Arguments
+"@
+
+
+            
+
+    $Path_Connect_Template = ("./$New_VPN_Name" + ".ps1")
+    Add-Content -Path $Path_Connect_Template -Value ($Template_Content_start + $Template_Content_mid + $Template_Content_end)
+    
+
+
+
+    #Copy files to right folders
+    Move-Item -Path $Path_Connect_Template -Destination "../$Path_Connect_Template"
+    Move-Item -Path $Path_Phonebook -Destination "../dep/$Path_Phonebook"
 
 
 }
