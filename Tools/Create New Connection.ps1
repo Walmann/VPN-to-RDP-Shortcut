@@ -67,8 +67,8 @@ Powershell.exe -executionpolicy Bypass -Command ".\dep\_MainConnect.ps1" @Argume
 
 
 }
-$cleanup = Read-Host -Prompt "Cleanup files?"
-if ($cleanup -eq "y"){
-    Remove-Item $Path_Phonebook
-    Remove-Item $Path_Connect_Template
-}
+# $cleanup = Read-Host -Prompt "Cleanup files?"
+# if ($cleanup -eq "y"){
+#     Remove-Item $Path_Phonebook
+#     Remove-Item $Path_Connect_Template
+# }
