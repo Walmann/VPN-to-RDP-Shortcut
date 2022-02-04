@@ -1,8 +1,8 @@
 ﻿[CmdletBinding()]
 param (
-    # [Parameter(Mandatory=$true)]
-    [Parameter()]
-    [string]$RDP_Address,
+    # # [Parameter(Mandatory=$true)]
+    # [Parameter()]
+    # [string]$RDP_Address,
 
     # [Parameter(Mandatory=$true)]
     [Parameter()]
@@ -36,7 +36,7 @@ $PhoneBookLocation  = ".\dep\$VPN_Name.pbk"
 function New-Credidential {
 
     #RDP Passord
-    $RDPPasswordsec = Read-Host -Prompt "Passord for $VPN_Name" -AsSecureString
+    $RDPPasswordsec = Read-Host -Prompt "Passord for $VPN_Name (RDP og VPN)" -AsSecureString
     $RDPPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($RDPPasswordsec))
     New-StoredCredential -Target $RDP_Server_IP -UserName $RDP_Username -Password $RDPPassword -Persist 'LocalMachine'
 
