@@ -24,6 +24,7 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
     New-Item -Path "." -Name ($New_VPN_Name + ".ps1") -ItemType "file"
     $Template_Content_start = @"
 `$Arguments = @{
+
 "@
 
 
@@ -63,7 +64,7 @@ Powershell.exe -executionpolicy Bypass -Command ".\dep\_MainConnect.ps1" @Argume
 
     #Copy files to right folders
     Move-Item -Path $Path_Connect_Template -Destination "../$Path_Connect_Template"
-    Move-Item -Path $Path_Phonebook -Destination "../dep/$Path_Phonebook"
+    Move-Item -Path $Path_Phonebook -Destination "../dep/Phonebooks/$Path_Phonebook"
 
 
 }
