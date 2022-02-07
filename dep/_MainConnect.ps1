@@ -30,11 +30,11 @@ param (
 
 
 #Debug:
-$VPN_Name                   = "Nett-Opp IT"
-$RDP_Server_IP              = "10.0.100.35"
-$VPN_User                   = "nett-opp"
-$VPN_And_RDP_PW_Same        = "y"
-$VPN_Config_Name            = "RDP_TO_VPN_Nett-Opp IT"
+# $VPN_Name                   = ""
+# $RDP_Server_IP              = ""
+# $VPN_User                   = ""
+# $VPN_And_RDP_PW_Same        = ""
+# $VPN_Config_Name            = ""
 #Debug End
 
 
@@ -105,7 +105,7 @@ if ([string]::IsNullOrEmpty($VPN_User) -or [string]::IsNullOrEmpty($VPNPassword)
     if ($New_VPN_And_RDP_PW_Same -eq $false) {
         $VPNPassword = Get-StoredCredential -Target $RDP_Server_IP -AsCredentialObject
         # $VPNPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($VPNPassword.Password))
-        $VPNPassword = $VPNPassword.Passwordras
+        $VPNPassword = $VPNPassword.Password
         Write-Host "Using RDP Password as VPN Password"
     }
 }
