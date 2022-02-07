@@ -12,7 +12,9 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
 
     $New_VPN_Config_Name    = "RDP_TO_VPN_$New_VPN_Name"
 
-
+    if ([string]::IsNullOrEmpty($New_RDP_Username)){
+        $New_RDP_Username = $New_VPN_Username
+    }
 
     if ($New_VPN_And_RDP_PW_Same.ToLower -eq "y"){
         $New_VPN_And_RDP_PW_Same = $true
@@ -41,7 +43,7 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
 
     [System.Collections.ArrayList]$Template_Content_mid = @()
     if (![string]::IsNullOrEmpty($New_VPN_Name)){
-        $Template_Content_mid.Add(' VPN_Name                   = ' + "`"$New_VPN_Name`"" + "`n")
+        $Template_Content_mid.Add(' VPN_Name                   = ' + "`"`'$New_VPN_Name`'`"" + "`n")
         }
     if (![string]::IsNullOrEmpty($New_RDP_Server_IP)){
         $Template_Content_mid.Add(' RDP_Server_IP              = ' + "`"$New_RDP_Server_IP`"" + "`n")
@@ -59,7 +61,7 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
         $Template_Content_mid.Add(' VPN_And_RDP_PW_Same        = ' + "`"$New_VPN_And_RDP_PW_Same`"" + "`n")
         }
     if (![string]::IsNullOrEmpty($New_VPN_Config_Name)){
-        $Template_Content_mid.Add(' VPN_Config_Name            = ' + "`"$New_VPN_Config_Name`"" + "`n")
+        $Template_Content_mid.Add(' VPN_Config_Name            = ' + "`"`'$New_VPN_Config_Name`'`"" + "`n")
         }
     $Template_Content_end = @"
 
