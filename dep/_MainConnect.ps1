@@ -19,20 +19,26 @@ param (
     [string]$VPN_Name,
 
     [Parameter()]
-    [string]$VPN_User
+    [string]$VPN_User,
+
+    [Parameter()]
+    [string]$VPN_And_RDP_PW_Same,
+    
+    [Parameter()]
+    [string]$VPN_Config_Name
 )
-$PhoneBookLocation  = ".\dep\Phonebooks\$VPN_Name.pbk"
 
 
 #Debug:
-# $RDP_Address     = ""
-# $RDP_Username    = ""
-# $RDP_Port        = ""                    #Viss denne er tom brukes standard port
-# $RDP_Server_IP   = ""                    #Må være IP addresse
-# $VPN_Name        = ""                    #Navnet til VPN tilkoblingen i .dep\Phonebook.pbk
-# $VPN_User        = ""                    #Viss denne er tom brukes RDP_Username
+$VPN_Name                   = "Nett-Opp IT"
+$RDP_Server_IP              = "10.0.100.35"
+$VPN_User                   = "nett-opp"
+$VPN_And_RDP_PW_Same        = "y"
+$VPN_Config_Name            = "RDP_TO_VPN_Nett-Opp IT"
+#Debug End
 
 
+$PhoneBookLocation  = ".\dep\Phonebooks\$VPN_Config_Name.pbk"
 function New-Credidential {
 
     #RDP Passord
@@ -40,10 +46,13 @@ function New-Credidential {
     $RDPPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($RDPPasswordsec))
     New-StoredCredential -Target $RDP_Server_IP -UserName $RDP_Username -Password $RDPPassword -Persist 'LocalMachine' -Comment $VPN_Name
 
-    # #VPN Passord
+    # # #VPN Passord
     # $VPNPWSameAsRDP = Read-Host -Prompt "Er passordet for VPN det samme som RDP? Y/N"
-    # if (($VPNPWSameAsRDP -eq "Y") -or $VPNPWSameAsRDP -eq "yes") {
-    #     $VPNPassword = $RDPPassword
+    # if (($VPNPWSameAsRDP.ToLower -eq "n") -or $VPNPWSameAsRDP.ToLower -eq "no") {
+
+    #     $RDPPasswordsec = Read-Host -Prompt "Passord for $VPN_Name (VPN)" -AsSecureString
+    #     $RDPPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($RDPPasswordsec))
+    #     New-StoredCredential -Target $RDP_Server_IP -UserName $RDP_Username -Password $RDPPassword -Persist 'LocalMachine' -Comment $VPN_Name
     # }
 
     Return $RDPPassword
@@ -54,10 +63,20 @@ function New-Credidential {
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 
 #Installerer CredidentialManager
+# https://www.powershellgallery.com/packages/CredentialManager/2.0
+# https://github.com/davotronic5000/PowerShell_Credential_Manager
 if (-Not (Get-Module -ListAvailable -Name CredentialManager)) {
     Write-Host "CredidentialManager er ikke installert. Installerer (Dette kan ta noen sekunder) "
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
     Install-Module -Name CredentialManager
+} 
+#Installerer VPNCredentialsHelper
+# https://www.powershellgallery.com/packages/VPNCredentialsHelper
+# https://github.com/paulstancer/VPNCredentialsHelper
+if (-Not (Get-Module -ListAvailable -Name VPNCredentialsHelper)) {
+    Write-Host "VPNCredentialsHelper er ikke installert. Installerer (Dette kan ta noen sekunder) "
+    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+    Install-Module -Name VPNCredentialsHelper
 } 
 
 
@@ -76,17 +95,24 @@ if ([string]::IsNullOrEmpty($VPN_User) -or [string]::IsNullOrEmpty($VPNPassword)
         $VPN_User    = $RDP_Username
         Write-Host "Using RDP Username as VPN Username"
     }
-    if ([string]::IsNullOrEmpty($VPNPassword)) {
+    # if ([string]::IsNullOrEmpty($VPNPassword)) {
+    if ($New_VPN_And_RDP_PW_Same -eq $true) {
         $VPNPassword = Get-StoredCredential -Target $RDP_Server_IP -AsCredentialObject
         # $VPNPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($VPNPassword.Password))
         $VPNPassword = $VPNPassword.Password
+        Write-Host "Using RDP Password as VPN Password"
+    }
+    if ($New_VPN_And_RDP_PW_Same -eq $false) {
+        $VPNPassword = Get-StoredCredential -Target $RDP_Server_IP -AsCredentialObject
+        # $VPNPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($VPNPassword.Password))
+        $VPNPassword = $VPNPassword.Passwordras
         Write-Host "Using RDP Password as VPN Password"
     }
 }
 
 # Koble til VPN
 Write-Host "Connecting to VPN"
-rasdial.exe $VPN_Name $VPN_User $VPNPassword "/phonebook:$PhoneBookLocation"
+rasdial.exe "$VPN_Name" $VPN_User $VPNPassword "/phonebook:$PhoneBookLocation"
 # Write-Host $VPN_Name.ConnectionStatus
 
 
@@ -96,6 +122,5 @@ $RDPid = (Get-Process mstsc).Id
 Wait-Process -Id $RDPid
 
 Write-Host "RDP Avsluttet. Avslutter og rydder opp."
-rasdial.exe $VPN_Name /DISCONNECT
+rasdial.exe "$VPN_Name" /DISCONNECT
 
-# Remove-StoredCredential -Target $RDPConnection
