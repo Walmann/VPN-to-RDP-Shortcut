@@ -110,6 +110,13 @@ if ([string]::IsNullOrEmpty($VPN_User) -or [string]::IsNullOrEmpty($VPNPassword)
     }
 }
 
+#Kofigurere RDP Port variabel
+if ([string]::IsNullOrEmpty($RDP_Port)){
+    $RDP_IP_And_Port = ${RDP_Server_IP}
+}
+else {$RDP_IP_And_Port = "${RDP_Server_IP}:${RDP_Port}"}
+
+
 # Koble til VPN
 Write-Host "Connecting to VPN"
 rasdial.exe "$VPN_Name" $VPN_User $VPNPassword "/phonebook:$PhoneBookLocation"
@@ -117,7 +124,7 @@ rasdial.exe "$VPN_Name" $VPN_User $VPNPassword "/phonebook:$PhoneBookLocation"
 
 
 #Kobler til RPD
-Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:$RDP_Server_IP"
+Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:$RDP_IP_And_Port"
 $RDPid = (Get-Process mstsc).Id
 Wait-Process -Id $RDPid
 
