@@ -6,7 +6,7 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
     $New_VPN_Name           = Read-Host -Prompt "Navnet til ny tilkobling? Dette blir navnet på tilkoblingsfilen"
     $New_VPN_Username       = Read-Host -Prompt "Brukernavn for VPN?"
     $New_RDP_Server_IP      = Read-Host -Prompt "Lokal-IP til server (RDP)"
-    $New_RDP_Server_Port    = Read-Host -Prompt "RDP Port (La være blank for standard RDP port)"
+    $New_RDP_Server_Port    = Read-Host -Prompt "INTERN RDP Port (La være blank for standard RDP port)"
     $New_RDP_Username       = Read-Host -Prompt "Brukernavn for RDP (La være blank viss lik VPN bruker)"
     $New_VPN_And_RDP_PW_Same= Read-Host -Prompt "Er VPN og RDP Passord det samme? (Y/n)"
 
