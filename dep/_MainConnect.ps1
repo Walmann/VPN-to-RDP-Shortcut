@@ -58,25 +58,12 @@ function New-Credidential {
 }
 
 
-#Setter muligheten for å kjøre skriptet.
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 
-#Installerer CredidentialManager
-# https://www.powershellgallery.com/packages/CredentialManager/2.0
-# https://github.com/davotronic5000/PowerShell_Credential_Manager
-if (-Not (Get-Module -ListAvailable -Name CredentialManager)) {
-    Write-Host "CredidentialManager er ikke installert. Installerer (Dette kan ta noen sekunder) "
-    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    Install-Module -Name CredentialManager
-} 
-#Installerer VPNCredentialsHelper
-# https://www.powershellgallery.com/packages/VPNCredentialsHelper
-# https://github.com/paulstancer/VPNCredentialsHelper
-if (-Not (Get-Module -ListAvailable -Name VPNCredentialsHelper)) {
-    Write-Host "VPNCredentialsHelper er ikke installert. Installerer (Dette kan ta noen sekunder) "
-    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    Install-Module -Name VPNCredentialsHelper
-} 
+
+#Sjekker om Dependencies er installert.
+if ((-Not (Get-Module -ListAvailable -Name CredentialManager)) -or (-Not (Get-Module -ListAvailable -Name VPNCredentialsHelper))) {
+    Write-Error "Kan ikke finne dependencies. Vennligst kjør Setup.ps1"
+}
 
 
 #Lager en ny credential i Windows Legitimasjonsenter, viss den ikke finnes fra før.
