@@ -1,5 +1,5 @@
 referanser/
 .gitignore
 debug_*
-.vscode/launch.json
+.vscode/*
 Phonebooks/*

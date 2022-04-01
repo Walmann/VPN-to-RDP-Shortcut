@@ -66,7 +66,6 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
     $Template_Content_end = @"
 
 }
-#OBS!!! Argumenter som ikke er i bruk må kommenteres ut med "#"
 
 Powershell.exe -executionpolicy Bypass -Command ".\dep\_MainConnect.ps1" @Arguments
 "@

@@ -7,6 +7,6 @@ $Arguments = @{
     VPN_Name        = "TempVpn"             #Navnet til VPN tilkoblingen i .dep\Phonebook.pbk
     # VPN_User        = ""                    #Viss denne er tom brukes RDP_Username
 }
-    #OBS!!! Argumenter som ikke er i bruk må kommenteres ut med "#"
+
 
 Powershell.exe -executionpolicy Bypass -Command  ".\dep\_MainConnect.ps1" @Arguments
