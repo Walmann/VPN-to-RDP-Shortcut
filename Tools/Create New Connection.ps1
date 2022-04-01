@@ -82,7 +82,7 @@ Powershell.exe -executionpolicy Bypass -Command ".\dep\_MainConnect.ps1" @Argume
 
     #Copy files to right folders
     Move-Item -Path $Path_Connect_Template -Destination "../$Path_Connect_Template"
-    Move-Item -Path $Path_Full_Phonebook -Destination "../dep/Phonebooks/$Path_Phonebook"
+    Move-Item -Path $Path_Full_Phonebook -Destination "../Phonebooks/$Path_Phonebook"
 
 
 }

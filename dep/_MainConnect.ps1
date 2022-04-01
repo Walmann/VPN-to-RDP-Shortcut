@@ -38,7 +38,7 @@ param (
 #Debug End
 
 
-$PhoneBookLocation  = ".\dep\Phonebooks\$VPN_Config_Name.pbk"
+$PhoneBookLocation  = ".\Phonebooks\$VPN_Config_Name.pbk"
 if ($VPN_And_RDP_PW_Same -eq "n"){
     $VPN_And_RDP_PW_Same = $false
 }
