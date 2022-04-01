@@ -105,6 +105,7 @@ function Install-Dependencies {
         else{
             Remove-Item -Path "$env:temp/Setup.ps1"
             Read-Host "Installasjon suksessfull! Trykk Enter for å fortsette"
+            exit
         }
     }
     else {
