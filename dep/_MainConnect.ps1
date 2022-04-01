@@ -29,21 +29,29 @@ param (
 )
 
 
-#Debug:
-# $VPN_Name                   = ""
-# $VPN_User                   = ""
-# $VPN_And_RDP_PW_Same        = ""
-# $VPN_Config_Name            = ""
-# $RDP_Server_IP              = ""
-#Debug End
+# # Debug:
+# $VPN_Name                   = "'Debug_Cemit'"
+# $RDP_Server_IP              = "10.0.100.210"
+# $RDP_Username               = "nett-opp"
+# $VPN_User                   = "nett-opp"
+# $VPN_And_RDP_PW_Same        = "y"
+# $VPN_Config_Name            = "'RDP_TO_VPN_Debug_Cemit'"
+# # Debug End
 
 
 $PhoneBookLocation  = ".\Phonebooks\$VPN_Config_Name.pbk"
 if ($VPN_And_RDP_PW_Same -eq "n"){
-    $VPN_And_RDP_PW_Same = $false
+    $VPN_And_RDP_PW_Same = "False"
+    [System.Convert]::ToBoolean($VPN_And_RDP_PW_Same)
 }
 if ($VPN_And_RDP_PW_Same -eq "y"){
-    $VPN_And_RDP_PW_Same = $true
+    $VPN_And_RDP_PW_Same = "True"
+    $VPN_And_RDP_PW_Same = [System.Convert]::ToBoolean($VPN_And_RDP_PW_Same)
+}
+if ([string]::IsNullOrEmpty($VPN_And_RDP_PW_Same)){
+    Write-Host "Variable VPN_And_RDP_PW_Same is empty. Assuming same PW."
+    $VPN_And_RDP_PW_Same = "True"
+    $VPN_And_RDP_PW_Same = [System.Convert]::ToBoolean($VPN_And_RDP_PW_Same)
 }
 
 
@@ -97,13 +105,19 @@ if ([string]::IsNullOrEmpty($RDP_Port)){
 else {$RDP_IP_And_Port = "${RDP_Server_IP}:${RDP_Port}"}
 
 
+# Write-Host "VPNname: " + $VPN_Name
+# Write-Host "VPNuser: " + $VPN_User
+# Write-Host "VPNpw: " + $VPNPassword
+# Write-Host "PhoneLoc: " + $PhoneBookLocation
+
+
 # Koble til VPN
 Write-Host "Connecting to VPN with stored credentials"
 rasdial.exe "$VPN_Name" "$VPN_User" $VPNPassword "/phonebook:$PhoneBookLocation"
 
 
 
-if (-Not (Test-Connection -ComputerName $RDP_Server_IP -Count 1 -Quiet)){
+if (-Not (Test-Connection -ComputerName $RDP_Server_IP -Count 1 -Quiet)){ #
 Write-Host (" Kunne ikke koble til VPN. `nDette betyr enten feil i instillinger, eller ingen lagret passord. `n I neste vindu velger du 'Koble til' deretter fyller du ut innloggings informasjonen.")
 rasphone -FilePath $PhoneBookLocation
 $RasPid = (Get-Process rasphone).Id

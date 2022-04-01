@@ -10,18 +10,28 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
     $New_RDP_Username       = Read-Host -Prompt "Brukernavn for RDP (La være blank viss lik VPN bruker)"
     $New_VPN_And_RDP_PW_Same= Read-Host -Prompt "Er VPN og RDP Passord det samme? (Y/n)"
 
+    if (!$New_VPN_And_RDP_PW_Same.ToLower() -eq "n"){
+        $New_VPN_And_RDP_PW_Same = "y"
+    }
+
+
+
     $New_VPN_Config_Name    = "RDP_TO_VPN_$New_VPN_Name"
 
     if ([string]::IsNullOrEmpty($New_RDP_Username)){
         $New_RDP_Username = $New_VPN_Username
     }
 
-    if ($New_VPN_And_RDP_PW_Same.ToLower -eq "y"){
-        $New_VPN_And_RDP_PW_Same = $true
-    }
-    if ($New_VPN_And_RDP_PW_Same.ToLower -eq "n"){
-        $New_VPN_And_RDP_PW_Same = $false
-    }
+    # if ($New_VPN_And_RDP_PW_Same.ToLower() -eq "y") {
+    #     $New_VPN_And_RDP_PW_Same = "True"
+    #     [System.Convert]::ToBoolean($New_VPN_And_RDP_PW_Same)
+    # }
+    # if ($New_VPN_And_RDP_PW_Same.ToLower() -eq "n"){
+    #     $New_VPN_And_RDP_PW_Same = "False"
+    #     [System.Convert]::ToBoolean($New_VPN_And_RDP_PW_Same)
+    # }
+
+
 
     #Lag PBK filen, inneholder VPN instillinger
     $Path_Phonebook = ($New_VPN_Config_Name + ".pbk")
@@ -31,7 +41,7 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
     # Write-Host $Path_Full_Phonebook.FullName
     # $abcd = $env:SystemRoot + "\System32\rasdial.exe"
     Start-Process -FilePath "$env:SystemRoot\System32\rasphone.exe" -ArgumentList "-f `"$Path_Phonebook`"","-a `"$New_VPN_Name`"" -Wait
-    Start-Process -FilePath "$env:SystemRoot\System32\rasphone.exe" -ArgumentList "-f `"$Path_Phonebook`"","-e `"$New_VPN_Name`"" -Wait
+    Start-Process -FilePath "$env:SystemRoot\System32\rasphone.exe" -ArgumentList "-f `"$Path_Phonebook`""      #,"-e `"$New_VPN_Name`"" -Wait
 
     #Lag en kopi av template og bytt ut informasjon
     New-Item -Path "." -Name ($New_VPN_Name + ".ps1") -ItemType "file"
@@ -39,6 +49,7 @@ if ($a.ToLower() -eq "e" -or $null -eq $a) {
 `$Arguments = @{
 
 "@
+
 
 
     [System.Collections.ArrayList]$Template_Content_mid = @()
