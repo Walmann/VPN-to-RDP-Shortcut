@@ -104,7 +104,7 @@ rasdial.exe "$VPN_Name" "$VPN_User" $VPNPassword "/phonebook:$PhoneBookLocation"
 
 
 if (-Not (Test-Connection -ComputerName $RDP_Server_IP -Count 1 -Quiet)){
-[System.Windows.MessageBox]::Show(" Kunne ikke koble til VPN. `nDette betyr enten feil i instillinger, eller ingen lagret passord. `n I neste vindu velger du 'Koble til' deretter fyller du ut innloggings informasjonen.")
+Write-Host (" Kunne ikke koble til VPN. `nDette betyr enten feil i instillinger, eller ingen lagret passord. `n I neste vindu velger du 'Koble til' deretter fyller du ut innloggings informasjonen.")
 rasphone -FilePath $PhoneBookLocation
 $RasPid = (Get-Process rasphone).Id
 Wait-Process -Id $RasPid
