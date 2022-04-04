@@ -29,14 +29,6 @@ param (
 )
 
 
-# # Debug:
-# $VPN_Name                   = "'Debug_Cemit'"
-# $RDP_Server_IP              = "10.0.100.210"
-# $RDP_Username               = "nett-opp"
-# $VPN_User                   = "nett-opp"
-# $VPN_And_RDP_PW_Same        = "y"
-# $VPN_Config_Name            = "'RDP_TO_VPN_Debug_Cemit'"
-# # Debug End
 
 
 $PhoneBookLocation  = ".\Phonebooks\$VPN_Config_Name.pbk"
